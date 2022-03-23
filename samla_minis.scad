@@ -1,4 +1,4 @@
-layer = "1"; // ["1":bottom,"2":top]
+layer = "1"; // ["1":Samla bottom,"2":Samla top, "3":365 1Liter,"4":364 0.75Liter]
 
 tray20 = 0; // [0:8]
 tray25 = 7; // [0:7]
@@ -9,17 +9,18 @@ makeLastSolid = false; // [false:"Edge not Tray Solid", true: "Edge not Tray Sol
 
 clearance = 1.0;
 insertBorderWidth = 2;
-trayHollowHight = 20;
 edgeTrayBorderWidth = 5;
 
 /* [Hidden] */
-width = 198;
-depth = layer == "1" ? 147 : 155;
-hight = 3;
+trayHollowHight = 20;
+version = layer == "1" || layer == "2" ? "samla" : "365";
+depth = layer == "1" ? 147 : (layer == "2" ? 155 : 124);
+hight = version == "samla" ? 3 : 5.2;
+width = layer == "3" ? 183 : (layer == "4" ? 124 : 198);
+diameter = 40;
 
 borderHight = 5;
 borderWidth = 2;
-falloutStopHight = 2.5;
 
 totalTrays = tray20 + tray25 + tray32 + tray40;
 neededWidth = 2 + (tray20 * 20 + tray25 * 25 + tray32 * 32 + tray40 * 40) + totalTrays * (borderWidth + clearance);
@@ -112,57 +113,102 @@ module pattern(trayDist, trays, xpos, trayNrFirstTray)
                 {
                     // translate([xpos + i * (trayDist + clearance + borderWidth) - trayDist/2 - clearance/2, depth/2 - n * (2 * x + 2) , -1]) rotate(30) cylinder(x, x, x, $fn=6);
                     // translate([xpos + i * (trayDist + clearance + borderWidth) - trayDist/2 - clearance/2, depth/2 + n * (2 * x + 2) , -1]) rotate(30) cylinder(x, x, x, $fn=6);
-                    translate([xpos + i * (trayDist + clearance + borderWidth) - (trayDist + clearance)/2, depth/2 + n * (y + insertBorderWidth), -1]) cube([x,y,10], center=true);
-                    translate([xpos + i * (trayDist + clearance + borderWidth) - (trayDist + clearance)/2, depth/2 - n * (y + insertBorderWidth), -1]) cube([x,y,10], center=true);
+                    translate([xpos + i * (trayDist + clearance + borderWidth) - (trayDist + clearance)/2, depth/2 + n * (y + insertBorderWidth), -1]) cube([x,y,3*hight], center=true);
+                    translate([xpos + i * (trayDist + clearance + borderWidth) - (trayDist + clearance)/2, depth/2 - n * (y + insertBorderWidth), -1]) cube([x,y,3*hight], center=true);
                 }
             }
         }
     }
 }
 
-union()
+module tray()
 {
-    // Pattern
-    difference()
+    union()
     {
-        // Base
-        cube([width, depth, hight]);
-
         // Pattern
+        difference()
+        {
+            // Base
+            cube([width, depth, hight]);
+
+            // Pattern
+            union()
+            {
+                xpos20 = (width - neededWidth) / 2.0;
+
+                pattern(20, tray20, xpos20, 0);
+                xpos25 = xpos20 + tray20 * (clearance+borderWidth+20);
+
+                pattern(25, tray25, xpos25, tray20);
+                xpos32 = xpos25 + tray25 * (clearance+borderWidth+25);
+
+                pattern(32, tray32, xpos32, tray20+tray25);
+                xpos40 = xpos32 + tray32 * (clearance+borderWidth+32);
+
+                pattern(40, tray40, xpos40, tray20+tray25+tray32);
+            }
+        }
+
+        // Borders
         union()
         {
             xpos20 = (width - neededWidth) / 2.0;
 
-            pattern(20, tray20, xpos20, 0);
+            borders(20, tray20, xpos20);
             xpos25 = xpos20 + tray20 * (clearance+borderWidth+20);
 
-            pattern(25, tray25, xpos25, tray20);
+            borders(25, tray25, xpos25);
             xpos32 = xpos25 + tray25 * (clearance+borderWidth+25);
 
-            pattern(32, tray32, xpos32, tray20+tray25);
+            borders(32, tray32, xpos32);
             xpos40 = xpos32 + tray32 * (clearance+borderWidth+32);
 
-            pattern(40, tray40, xpos40, tray20+tray25+tray32);
+            borders(40, tray40, xpos40);
+
+            cube([width,edgeTrayBorderWidth,hight]);
+            translate([0, depth-edgeTrayBorderWidth, 0]) cube([width,edgeTrayBorderWidth,hight]);
         }
     }
+}
 
-    // Borders
+module discQuater(diameter, border, hight)
+{
+    intersection()
+    {
+        difference()
+        {
+            cylinder(d=diameter, h=hight, $fn=120);
+            cylinder(d=diameter-border*2, h=hight, $fn=120);
+        }
+        cube([diameter/2, diameter/2, hight]);
+    }
+}
+
+if (version == "samla")
+{
+    tray();
+}
+
+if (version == "365")
+{
     union()
     {
-        xpos20 = (width - neededWidth) / 2.0;
-
-        borders(20, tray20, xpos20);
-        xpos25 = xpos20 + tray20 * (clearance+borderWidth+20);
-
-        borders(25, tray25, xpos25);
-        xpos32 = xpos25 + tray25 * (clearance+borderWidth+25);
-
-        borders(32, tray32, xpos32);
-        xpos40 = xpos32 + tray32 * (clearance+borderWidth+32);
-
-        borders(40, tray40, xpos40);
-
-        cube([width,edgeTrayBorderWidth,hight]);
-        translate([0, depth-edgeTrayBorderWidth, 0]) cube([width,edgeTrayBorderWidth,hight]);
+        intersection()
+        {
+            tray();
+            minkowski()
+            {
+                cube([width-diameter, depth-diameter, hight]);
+                translate([ diameter/2, diameter/2, 0 ]) cylinder(d=diameter, h=hight+borderHight, $fn=120, center=false);
+            }
+        }
+        //back right
+        translate([width-diameter/2, depth-diameter/2, 0]) discQuater(diameter, edgeTrayBorderWidth, hight);
+        //front left
+        translate([diameter/2, diameter/2, 0]) mirror([1, 1, 0]) discQuater(diameter, edgeTrayBorderWidth, hight);
+        //front right
+        translate([width-diameter/2, diameter/2, 0]) mirror([0, 1, 0])  discQuater(diameter, edgeTrayBorderWidth, hight);
+        //back left
+        translate([diameter/2, depth-diameter/2, 0]) mirror([1, 0, 0]) discQuater(diameter, edgeTrayBorderWidth, hight);
     }
 }
