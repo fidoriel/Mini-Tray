@@ -1,29 +1,41 @@
-layer = "1"; // ["1":Samla bottom,"2":Samla top, "3":365 1Liter,"4":364 0.75Liter]
+layer = "1"; // ["1":Samla bottom,"2":Samla top, "3":365 1Liter,"4":365 0.75Liter,"5":custom]
 
 tray20 = 0; // [0:8]
 tray25 = 7; // [0:7]
 tray32 = 0; // [0:6]
 tray40 = 0; // [0:3]
+tray50 = 0; // [0:3]
 
 makeLastSolid = false; // [false:"Edge not Tray Solid", true: "Edge not Tray Solid"]
 
 clearance = 1.0;
 insertBorderWidth = 2;
 edgeTrayBorderWidth = 5;
+clampHight = 5;
+
+customWidth = 100;
+customDepth = 100;
 
 /* [Hidden] */
 trayHollowHight = 20;
-version = layer == "1" || layer == "2" ? "samla" : "365";
-depth = layer == "1" ? 147 : (layer == "2" ? 155 : 124);
+version = layer == "1" || layer == "2" ? "samla" : (layer == "5" ? "custom" : "365");
+depthPreset = layer == "1" ? 147 : (layer == "2" ? 155 : 124);
 hight = version == "samla" ? 3 : 5.2;
-width = layer == "3" ? 183 : (layer == "4" ? 124 : 198);
+widthPreset = layer == "3" ? 183 : (layer == "4" ? 124 : 198);
 diameter = 40;
 
-borderHight = 5;
+depth = layer == "5" ? customDepth : depthPreset;
+width = layer == "5" ? customDepth : widthPreset;
+
+
+borderHight = clampHight;
 borderWidth = 2;
 
-totalTrays = tray20 + tray25 + tray32 + tray40;
-neededWidth = 2 + (tray20 * 20 + tray25 * 25 + tray32 * 32 + tray40 * 40) + totalTrays * (borderWidth + clearance);
+customRoundEdges = false;
+edgeDegree = 0.0;
+
+totalTrays = tray20 + tray25 + tray32 + tray40 + tray50;
+neededWidth = 2 + (tray20 * 20 + tray25 * 25 + tray32 * 32 + tray40 * 40 + tray50 * 50) + totalTrays * (borderWidth + clearance);
 for (i=[0:0]) echo(i);
 assert( width >= neededWidth, "there are too many trays");
 
@@ -146,6 +158,9 @@ module tray()
                 xpos40 = xpos32 + tray32 * (clearance+borderWidth+32);
 
                 pattern(40, tray40, xpos40, tray20+tray25+tray32);
+                xpos50 = xpos40 + tray40 * (clearance+borderWidth+40);
+                
+                pattern(50, tray50, xpos50, tray20+tray25+tray32+tray40);
             }
         }
 
@@ -164,6 +179,9 @@ module tray()
             xpos40 = xpos32 + tray32 * (clearance+borderWidth+32);
 
             borders(40, tray40, xpos40);
+            xpos50 = xpos40 + tray40 * (clearance+borderWidth+40);
+            
+            borders(50, tray50, xpos50);
 
             cube([width,edgeTrayBorderWidth,hight]);
             translate([0, depth-edgeTrayBorderWidth, 0]) cube([width,edgeTrayBorderWidth,hight]);
@@ -184,12 +202,16 @@ module discQuater(diameter, border, hight)
     }
 }
 
-if (version == "samla")
+
+
+
+
+if (version == "samla" || version == "custom" && customRoundEdges == false)
 {
     tray();
 }
 
-if (version == "365")
+else if (version == "365" || version == "custom" && customRoundEdges == true)
 {
     union()
     {
