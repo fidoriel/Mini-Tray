@@ -27,7 +27,7 @@ widthPreset = layer == "3" ? 183 : (layer == "4" ? 124 : 198);
 diameter = 40;
 
 depth = layer == "5" ? customDepth : depthPreset;
-width = layer == "5" ? customDepth : widthPreset;
+width = layer == "5" ? customWidth : widthPreset;
 
 
 borderHight = clampHight;
