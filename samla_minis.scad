@@ -1,8 +1,9 @@
-layer = "1"; // ["1":Samla bottom,"2":Samla top, "3":365 1Liter,"4":365 0.75Liter,"5":custom]
+layer = "5"; // ["1":Samla bottom,"2":Samla top, "3":365 1Liter,"4":365 0.75Liter,"5":custom]
 
 tray16 = 0; // [0:10]
 tray20 = 0; // [0:8]
-tray25 = 7; // [0:7]
+tray25 = 1; // [0:7]
+tray28 = 1; // [0:7]
 tray32 = 0; // [0:6]
 tray40 = 0; // [0:3]
 tray50 = 0; // [0:3]
@@ -27,7 +28,7 @@ widthPreset = layer == "3" ? 183 : (layer == "4" ? 124 : 198);
 diameter = 40;
 
 depth = layer == "5" ? customDepth : depthPreset;
-width = layer == "5" ? customDepth : widthPreset;
+width = layer == "5" ? customWidth : widthPreset;
 
 
 borderHight = clampHight;
@@ -36,8 +37,8 @@ borderWidth = 2;
 customRoundEdges = false;
 edgeDegree = 0.0;
 
-totalTrays = tray20 + tray25 + tray32 + tray40 + tray50 + tray16 + tray75;
-neededWidth = 2 + (tray20 * 20 + tray25 * 25 + tray32 * 32 + tray40 * 40 + tray50 * 50 + tray16 * 16 + tray75 * 75) + totalTrays * (borderWidth + clearance);
+totalTrays = tray20 + tray25 + tray28 + tray32 + tray40 + tray50 + tray16 + tray75;
+neededWidth = 2 + (tray20 * 20 + tray25 * 25 + tray28 * 28.1 + tray32 * 32 + tray40 * 40 + tray50 * 50 + tray16 * 16 + tray75 * 75) + totalTrays * (borderWidth + clearance);
 for (i=[0:0]) echo(i);
 assert( width >= neededWidth, "there are too many trays");
 
@@ -169,6 +170,9 @@ module tray()
                 xpos16 = xpos75 + tray75 * (clearance+borderWidth+75);
                 
                 pattern(16, tray16, xpos16, tray20+tray25+tray32+tray40+tray50+tray75+tray16);
+
+                pattern(28, tray28, xpos28, tray20+tray25+tray28+tray32+tray40+tray50+tray75);
+                xpos28 = xpos75 + tray75 * (clearance+borderWidth+75);
             }
         }
 
@@ -182,6 +186,9 @@ module tray()
 
             borders(25, tray25, xpos25);
             xpos32 = xpos25 + tray25 * (clearance+borderWidth+25);
+
+            borders(28, tray28, xpos28);
+            xpos28 = xpos28 + tray28 * (clearance+borderWidth+28.1);
 
             borders(32, tray32, xpos32);
             xpos40 = xpos32 + tray32 * (clearance+borderWidth+32);
