@@ -155,24 +155,24 @@ module tray()
                 xpos25 = xpos20 + tray20 * (clearance+borderWidth+20);
 
                 pattern(25, tray25, xpos25, tray20);
-                xpos32 = xpos25 + tray25 * (clearance+borderWidth+25);
+                xpos28 = xpos25 + tray25 * (clearance+borderWidth+25);
 
-                pattern(32, tray32, xpos32, tray20+tray25);
+                pattern(28, tray28, xpos28, tray20+tray25);
+                xpos32  = xpos28 + tray28 * (clearance+borderWidth+28.1);
+
+                pattern(32, tray32, xpos32, tray20+tray25+tray28);
                 xpos40 = xpos32 + tray32 * (clearance+borderWidth+32);
 
-                pattern(40, tray40, xpos40, tray20+tray25+tray32);
+                pattern(40, tray40, xpos40, tray20+tray25+tray28+tray32);
                 xpos50 = xpos40 + tray40 * (clearance+borderWidth+40);
                 
-                pattern(50, tray50, xpos50, tray20+tray25+tray32+tray40+tray50);
+                pattern(50, tray50, xpos50, tray20+tray25+tray28+tray32+tray40+tray50);
                 xpos75 = xpos50 + tray50 * (clearance+borderWidth+50);
                 
-                pattern(75, tray75, xpos75, tray20+tray25+tray32+tray40+tray50+tray75);
+                pattern(75, tray75, xpos75, tray20+tray25+tray28+tray32+tray40+tray50+tray75);
                 xpos16 = xpos75 + tray75 * (clearance+borderWidth+75);
                 
-                pattern(16, tray16, xpos16, tray20+tray25+tray32+tray40+tray50+tray75+tray16);
-
-                pattern(28, tray28, xpos28, tray20+tray25+tray28+tray32+tray40+tray50+tray75);
-                xpos28 = xpos75 + tray75 * (clearance+borderWidth+75);
+                pattern(16, tray16, xpos16, tray20+tray25+tray28+tray32+tray40+tray50+tray75+tray16);
             }
         }
 
@@ -185,10 +185,10 @@ module tray()
             xpos25 = xpos20 + tray20 * (clearance+borderWidth+20);
 
             borders(25, tray25, xpos25);
-            xpos32 = xpos25 + tray25 * (clearance+borderWidth+25);
+            xpos28 = xpos25 + tray25 * (clearance+borderWidth+25);
 
             borders(28, tray28, xpos28);
-            xpos28 = xpos28 + tray28 * (clearance+borderWidth+28.1);
+            xpos32 = xpos28 + tray28 * (clearance+borderWidth+28.1);
 
             borders(32, tray32, xpos32);
             xpos40 = xpos32 + tray32 * (clearance+borderWidth+32);
