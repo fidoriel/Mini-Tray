@@ -7,6 +7,7 @@ tray28 = 0; // [0:6]
 tray32 = 0; // [0:6]
 tray40 = 0; // [0:3]
 tray50 = 0; // [0:3]
+tray60 = 0; // [0:3]
 tray75 = 0; // [0:2]
 
 makeLastSolid = false; // [false:"Edge not Tray Solid", true: "Edge not Tray Solid"]
@@ -37,8 +38,8 @@ borderWidth = 2;
 customRoundEdges = false;
 edgeDegree = 0.0;
 
-totalTrays = tray20 + tray25 + tray28 + tray32 + tray40 + tray50 + tray16 + tray75;
-neededWidth = 2 + (tray20 * 20 + tray25 * 25 + tray28 * 28 + tray32 * 32 + tray40 * 40 + tray50 * 50 + tray16 * 16 + tray75 * 75) + totalTrays * (borderWidth + clearance);
+totalTrays = tray20 + tray25 + tray28 + tray32 + tray40 + tray50 + tray16 + tray60 + tray75;
+neededWidth = 2 + (tray20 * 20 + tray25 * 25 + tray28 * 28 + tray32 * 32 + tray40 * 40 + tray50 * 50 + tray16 * 16 + tray60 * 60 + tray75 * 75) + totalTrays * (borderWidth + clearance);
 for (i=[0:0]) echo(i);
 assert( width >= neededWidth, "there are too many trays");
 
@@ -164,9 +165,14 @@ module tray()
                 xpos50 = xpos40 + tray40 * (clearance+borderWidth+40);
                 
                 pattern(50, tray50, xpos50, tray20+tray25+tray32+tray40);
-                xpos75 = xpos50 + tray50 * (clearance+borderWidth+50);
                 
-                pattern(75, tray75, xpos75, tray20+tray25+tray32+tray40+tray50);
+                xpos60 = xpos50 + tray50 * (clearance+borderWidth+50);
+                pattern(60, tray60, xpos60, tray20+tray25+tray32+tray40+tray50);
+                
+                xpos75 = xpos60 + tray60 * (clearance+borderWidth+60);
+                
+                pattern(75, tray75, xpos75, tray20+tray25+tray32+tray40+tray60);
+                
                 xpos16 = xpos75 + tray75 * (clearance+borderWidth+75);
                 
                 pattern(16, tray16, xpos16, tray20+tray25+tray32+tray40+tray50+tray75);
@@ -203,6 +209,9 @@ module tray()
             xpos28 = xpos16 + tray16 * (clearance+borderWidth+16);
 
             borders(28, tray28, xpos28);
+            
+            xpos60 = xpos28 + tray28 * (clearance+borderWidth+28);
+            borders(60, tray60, xpos60);
 
             cube([width,edgeTrayBorderWidth,hight]);
             translate([0, depth-edgeTrayBorderWidth, 0]) cube([width,edgeTrayBorderWidth,hight]);
