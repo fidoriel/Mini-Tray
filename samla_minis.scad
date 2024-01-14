@@ -7,7 +7,7 @@ tray28 = 0; // [0:6]
 tray32 = 0; // [0:6]
 tray40 = 0; // [0:3]
 tray50 = 0; // [0:3]
-tray60 = 0;
+tray60 = 0; // [0:3]
 tray75 = 0; // [0:2]
 
 makeLastSolid = false; // [false:"Edge not Tray Solid", true: "Edge not Tray Solid"]
