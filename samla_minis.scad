@@ -1,4 +1,4 @@
-layer = "1"; // ["1":Samla bottom,"2":Samla top, "3":365 1Liter,"4":365 0.75Liter,"5":custom]
+layer = "1"; // ["1":Samla bottom,"2":Samla top, "3":365 1Liter,"4":365 0.75Liter,"5":365 5.2Liter,"6":custom]
 
 tray16 = 0; // [0:10]
 tray20 = 0; // [0:8]
@@ -7,7 +7,7 @@ tray28 = 0; // [0:6]
 tray32 = 0; // [0:6]
 tray40 = 0; // [0:4]
 tray50 = 0; // [0:3]
-tray60 = 0; // [0:3]
+tray60 = 0; // [0:4]
 tray75 = 0; // [0:2]
 
 makeLastSolid = false; // [false:"Edge not Tray Solid", true: "Edge not Tray Solid"]
@@ -22,14 +22,28 @@ customDepth = 100;
 
 /* [Hidden] */
 trayHollowHight = 20;
-version = layer == "1" || layer == "2" ? "samla" : (layer == "5" ? "custom" : "365");
-depthPreset = layer == "1" ? 147 : (layer == "2" ? 155 : 124);
+version = layer == "1" || layer == "2" ? "samla" : (layer == "6" ? "custom" : "365");
+depthPreset = layer == "1" ? 147 : (
+                layer == "2" ? 155 : (
+                    layer == "5" ? 175 : (
+                        124
+                    )
+                )
+            )
+;
 hight = version == "samla" ? 3 : 5.2;
-widthPreset = layer == "3" ? 183 : (layer == "4" ? 124 : 198);
+widthPreset = layer == "3" ? 183 : (
+                layer == "4" ? 124 : (
+                    layer == "5" ? 280 : (
+                        198
+                    )
+                )
+            )
+;
 diameter = 40;
 
-depth = layer == "5" ? customDepth : depthPreset;
-width = layer == "5" ? customWidth : widthPreset;
+depth = layer == "6" ? customDepth : depthPreset;
+width = layer == "6" ? customWidth : widthPreset;
 
 
 borderHight = clampHight;
